@@ -24,7 +24,7 @@ async function updateRedirects() {
     <form @submit.prevent="updateRedirects">
       <p>
         <textarea
-          v-model="redirects.text"
+          v-model="redirects!.text"
           rows="6"
           placeholder="/from /to (one redirect per line)"
           style="width: 300px;"

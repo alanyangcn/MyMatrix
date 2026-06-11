@@ -8,6 +8,27 @@
       "when": 1765423539366,
       "tag": "0000_dapper_thena",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1781092800000,
+      "tag": "0001_private_vault",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1781092801000,
+      "tag": "0002_username_login",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1781092802000,
+      "tag": "0003_website_accounts",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,112 @@
+{
+  "app": {
+    "eyebrow": "Cloudflare 私有资料库",
+    "vaultEyebrow": "私有资料库",
+    "tagline": "在你自己的 Workers 应用里保存账号、域名续费、身份验证器密钥、备用验证码、服务器记录和提醒日期。"
+  },
+  "auth": {
+    "login": "登录",
+    "register": "注册",
+    "username": "用户名",
+    "password": "密码",
+    "showPassword": "显示密码",
+    "hidePassword": "隐藏密码",
+    "createUser": "创建用户",
+    "logout": "退出登录"
+  },
+  "summary": {
+    "authenticators": "身份验证器",
+    "backupCodes": "备用验证码组",
+    "servers": "服务器",
+    "domains": "域名",
+    "websites": "账号"
+  },
+  "tabs": {
+    "authenticators": "身份验证器",
+    "backupCodes": "备用验证码",
+    "servers": "服务器",
+    "domains": "域名",
+    "websites": "账号"
+  },
+  "reminders": {
+    "title": "近期提醒",
+    "empty": "未来 45 天没有提醒。",
+    "expires": "到期"
+  },
+  "types": {
+    "server": "服务器",
+    "domain": "域名"
+  },
+  "fields": {
+    "issuer": "发行方",
+    "account": "账号",
+    "totpSecret": "TOTP 密钥",
+    "notes": "备注",
+    "provider": "服务商",
+    "backupCodes": "备用验证码",
+    "name": "名称",
+    "ipAddress": "IP 地址",
+    "login": "登录名",
+    "panelUrl": "管理面板 URL",
+    "domain": "域名",
+    "registrar": "注册商",
+    "expiresAt": "截止时间",
+    "remindAt": "提醒时间",
+    "autoRenew": "自动续费",
+    "websiteName": "网站名称",
+    "websiteUrl": "网站 URL",
+    "selectWebsite": "选择网站",
+    "accountName": "账号名称",
+    "loginIdentifier": "邮箱 / 手机 / 用户名"
+  },
+  "actions": {
+    "add": "添加",
+    "addAuthenticator": "添加身份验证器",
+    "editAuthenticator": "修改身份验证器",
+    "addBackupCodes": "添加备用验证码",
+    "editBackupCodes": "修改备用验证码",
+    "addWebsite": "添加网站",
+    "editWebsite": "修改网站",
+    "addDomain": "添加域名",
+    "editDomain": "修改域名",
+    "addServer": "添加服务器",
+    "editServer": "修改服务器",
+    "addAccount": "添加账号",
+    "editAccount": "修改账号",
+    "allWebsites": "全部",
+    "cardView": "卡片模式",
+    "pillView": "胶囊模式",
+    "edit": "修改",
+    "save": "保存",
+    "cancel": "取消",
+    "confirmDeleteTitle": "确认删除",
+    "confirmDeleteMessage": "确定要删除“{name}”吗？此操作不可撤销。",
+    "confirmDelete": "确认删除",
+    "delete": "删除"
+  },
+  "status": {
+    "autoRenew": "自动续费",
+    "manualRenew": "手动续费"
+  },
+  "empty": {
+    "authenticators": "还没有身份验证器记录。",
+    "backupCodes": "还没有备用验证码组。",
+    "servers": "还没有服务器记录。",
+    "domains": "还没有域名记录。",
+    "websites": "还没有网站记录。",
+    "websiteAccounts": "这个网站下还没有账号。",
+    "websiteAccountsAll": "还没有账号。"
+  },
+  "errors": {
+    "authenticationFailed": "认证失败"
+  },
+  "language": {
+    "label": "语言",
+    "zh": "简体中文",
+    "en": "EN"
+  },
+  "theme": {
+    "dark": "切换到暗色模式",
+    "light": "切换到浅色模式"
+  }
+}

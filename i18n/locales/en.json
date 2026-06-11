@@ -1,0 +1,112 @@
+{
+  "app": {
+    "eyebrow": "Private Cloudflare Vault",
+    "vaultEyebrow": "Private Vault",
+    "tagline": "Store accounts, domain renewals, authenticator secrets, backup codes, server records, and reminder dates in your own Workers-backed app."
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "username": "Username",
+    "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "createUser": "Create user",
+    "logout": "Logout"
+  },
+  "summary": {
+    "authenticators": "Authenticators",
+    "backupCodes": "Backup code sets",
+    "servers": "Servers",
+    "domains": "Domains",
+    "websites": "Accounts"
+  },
+  "tabs": {
+    "authenticators": "Authenticators",
+    "backupCodes": "Backup Codes",
+    "servers": "Servers",
+    "domains": "Domains",
+    "websites": "Accounts"
+  },
+  "reminders": {
+    "title": "Upcoming",
+    "empty": "No reminders in the next 45 days.",
+    "expires": "expires"
+  },
+  "types": {
+    "server": "server",
+    "domain": "domain"
+  },
+  "fields": {
+    "issuer": "Issuer",
+    "account": "Account",
+    "totpSecret": "TOTP secret",
+    "notes": "Notes",
+    "provider": "Provider",
+    "backupCodes": "Backup codes",
+    "name": "Name",
+    "ipAddress": "IP address",
+    "login": "Login",
+    "panelUrl": "Panel URL",
+    "domain": "Domain",
+    "registrar": "Registrar",
+    "expiresAt": "Deadline",
+    "remindAt": "Reminder time",
+    "autoRenew": "Auto renew",
+    "websiteName": "Website name",
+    "websiteUrl": "Website URL",
+    "selectWebsite": "Select website",
+    "accountName": "Account name",
+    "loginIdentifier": "Email / phone / username"
+  },
+  "actions": {
+    "add": "Add",
+    "addAuthenticator": "Add authenticator",
+    "editAuthenticator": "Edit authenticator",
+    "addBackupCodes": "Add backup codes",
+    "editBackupCodes": "Edit backup codes",
+    "addWebsite": "Add website",
+    "editWebsite": "Edit website",
+    "addDomain": "Add domain",
+    "editDomain": "Edit domain",
+    "addServer": "Add server",
+    "editServer": "Edit server",
+    "addAccount": "Add account",
+    "editAccount": "Edit account",
+    "allWebsites": "All",
+    "cardView": "Card view",
+    "pillView": "Pill view",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirmDeleteTitle": "Confirm deletion",
+    "confirmDeleteMessage": "Delete \"{name}\"? This action cannot be undone.",
+    "confirmDelete": "Delete",
+    "delete": "Delete"
+  },
+  "status": {
+    "autoRenew": "auto renew",
+    "manualRenew": "manual renew"
+  },
+  "empty": {
+    "authenticators": "No authenticator records yet.",
+    "backupCodes": "No backup code sets yet.",
+    "servers": "No server records yet.",
+    "domains": "No domain records yet.",
+    "websites": "No website records yet.",
+    "websiteAccounts": "No accounts under this website yet.",
+    "websiteAccountsAll": "No accounts yet."
+  },
+  "errors": {
+    "authenticationFailed": "Authentication failed"
+  },
+  "language": {
+    "label": "Language",
+    "zh": "简体中文",
+    "en": "English"
+  },
+  "theme": {
+    "dark": "Switch to dark mode",
+    "light": "Switch to light mode"
+  }
+}

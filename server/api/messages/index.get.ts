@@ -1,6 +1,10 @@
 import { db, schema } from 'hub:db'
-import { desc } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 
 export default eventHandler(async () => {
-  return db.select().from(schema.messages).orderBy(desc(schema.messages.createdAt))
+  return db
+    .select()
+    .from(schema.messages)
+    .where(eq(schema.messages.isDeleted, false))
+    .orderBy(desc(schema.messages.createdAt))
 })
