@@ -16,7 +16,7 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-      "database_id": "a30aa564-d388-493b-8994-23f8dfd129f5",
+      "database_id": "bffbae6c-064b-4703-a19c-adc730bcd067",
       "migrations_table": "_hub_migrations",
       "migrations_dir": ".output/server/db/migrations/sqlite/",
 		}
@@ -24,17 +24,17 @@
 	"kv_namespaces": [
 		{
 			"binding": "KV",
-      "id": "ba6f3913de344cb1a833f3cf20ba5aa8"
+      "id": "7ca2c7f4e915499b9a092e4f25a7a02d"
 		},
 		{
 			"binding": "CACHE",
-      "id": "ba6f3913de344cb1a833f3cf20ba5aa8"
+      "id": "208d61b085cb402fb81facac038a691b"
 		}
 	],
 	"r2_buckets": [
 		{
 			"binding": "BLOB",
-      "bucket_name": "hub-starter-p2s5"
+      "bucket_name": "my-matrix"
 		}
 	],
 }
