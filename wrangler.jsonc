@@ -36,5 +36,5 @@
 			"binding": "BLOB",
       "bucket_name": "my-matrix"
 		}
-	],
+	],"name": "my-matrix",
 }
