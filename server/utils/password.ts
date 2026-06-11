@@ -1,4 +1,4 @@
-const PASSWORD_ITERATIONS = 210000
+const PASSWORD_ITERATIONS = 100000
 
 export async function hashPassword(password: string) {
   const salt = randomBase64Url(16)

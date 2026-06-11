@@ -17,6 +17,12 @@ useHead({
 </template>
 
 <style>
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   --ui-bg: #f4f7fb;
   --ui-panel-bg: #fff;

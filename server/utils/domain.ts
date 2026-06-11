@@ -7,11 +7,9 @@ export function normalizeDomainInput(value: string) {
     return url.hostname.replace(/^www\./, '')
   }
   catch {
-    return trimmed
-      .replace(/^https?:\/\//i, '')
-      .split('/')[0]
-      .split('?')[0]
-      .split('#')[0]
-      .replace(/^www\./, '')
+    const segment = trimmed.replace(/^https?:\/\//i, '').split('/')[0] || ''
+    const cleanQuery = segment.split('?')[0] || ''
+    const cleanHash = cleanQuery.split('#')[0] || ''
+    return cleanHash.replace(/^www\./, '')
   }
 }

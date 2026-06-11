@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { ref, reactive, onMounted, watch } from 'vue'
+
 type User = {
   id: number
   username: string
   displayName: string
   role: string
+  avatarUrl?: string
 }
 
 type Authenticator = {
@@ -93,53 +96,6 @@ const servers = ref<ServerRecord[]>([])
 const domains = ref<DomainRecord[]>([])
 const websites = ref<WebsiteRecord[]>([])
 
-const authenticatorForm = reactive({
-  issuer: '',
-  accountName: '',
-  secret: '',
-  notes: '',
-})
-
-const backupCodeForm = reactive({
-  provider: '',
-  accountName: '',
-  codes: '',
-  notes: '',
-})
-
-const serverForm = reactive({
-  name: '',
-  provider: '',
-  ipAddress: '',
-  loginName: '',
-  panelUrl: '',
-  expiresAt: '',
-  remindAt: '',
-  notes: '',
-})
-
-const domainForm = reactive({
-  domain: '',
-  registrar: '',
-  accountName: '',
-  expiresAt: '',
-  autoRenew: false,
-  notes: '',
-})
-
-const websiteForm = reactive({
-  name: '',
-  url: '',
-  notes: '',
-})
-
-const websiteAccountForm = reactive({
-  websiteId: 0,
-  accountName: '',
-  loginIdentifier: '',
-  notes: '',
-})
-
 function toTimestamp(value: string) {
   return value ? new Date(`${value}T00:00:00`).getTime() : null
 }
@@ -221,155 +177,101 @@ async function logout() {
   user.value = null
 }
 
-async function addAuthenticator() {
-  await $fetch('/api/vault/authenticators', { method: 'POST', body: authenticatorForm })
-  Object.assign(authenticatorForm, { issuer: '', accountName: '', secret: '', notes: '' })
+async function addAuthenticator(body: { issuer: string, accountName: string, secret: string, notes: string }) {
+  await $fetch('/api/vault/authenticators', { method: 'POST', body })
   await loadVault()
 }
 
-async function updateAuthenticator(id: number) {
-  await $fetch(`/api/vault/authenticators/${id}`, { method: 'PUT', body: authenticatorForm })
-  Object.assign(authenticatorForm, { issuer: '', accountName: '', secret: '', notes: '' })
+async function updateAuthenticator(id: number, body: { issuer: string, accountName: string, secret: string, notes: string }) {
+  await $fetch(`/api/vault/authenticators/${id}`, { method: 'PUT', body })
   await loadVault()
 }
 
-async function addBackupCodes() {
-  await $fetch('/api/vault/backup-codes', { method: 'POST', body: backupCodeForm })
-  Object.assign(backupCodeForm, { provider: '', accountName: '', codes: '', notes: '' })
+async function addBackupCodes(body: { provider: string, accountName: string, codes: string, notes: string }) {
+  await $fetch('/api/vault/backup-codes', { method: 'POST', body })
   await loadVault()
 }
 
-async function updateBackupCodes(id: number) {
-  await $fetch(`/api/vault/backup-codes/${id}`, { method: 'PUT', body: backupCodeForm })
-  Object.assign(backupCodeForm, { provider: '', accountName: '', codes: '', notes: '' })
+async function updateBackupCodes(id: number, body: { provider: string, accountName: string, codes: string, notes: string }) {
+  await $fetch(`/api/vault/backup-codes/${id}`, { method: 'PUT', body })
   await loadVault()
 }
 
-async function addServer() {
+async function addServer(body: { name: string, provider: string, ipAddress: string, loginName: string, panelUrl: string, expiresAt: string, remindAt: string, notes: string }) {
   await $fetch('/api/vault/servers', {
     method: 'POST',
     body: {
-      ...serverForm,
-      expiresAt: toTimestamp(serverForm.expiresAt),
-      remindAt: toTimestamp(serverForm.remindAt),
+      ...body,
+      expiresAt: toTimestamp(body.expiresAt),
+      remindAt: toTimestamp(body.remindAt),
     },
-  })
-  Object.assign(serverForm, {
-    name: '',
-    provider: '',
-    ipAddress: '',
-    loginName: '',
-    panelUrl: '',
-    expiresAt: '',
-    remindAt: '',
-    notes: '',
   })
   await loadVault()
 }
 
-async function updateServer(id: number) {
+async function updateServer(id: number, body: { name: string, provider: string, ipAddress: string, loginName: string, panelUrl: string, expiresAt: string, remindAt: string, notes: string }) {
   await $fetch(`/api/vault/servers/${id}`, {
     method: 'PUT',
     body: {
-      ...serverForm,
-      expiresAt: toTimestamp(serverForm.expiresAt),
-      remindAt: toTimestamp(serverForm.remindAt),
+      ...body,
+      expiresAt: toTimestamp(body.expiresAt),
+      remindAt: toTimestamp(body.remindAt),
     },
-  })
-  Object.assign(serverForm, {
-    name: '',
-    provider: '',
-    ipAddress: '',
-    loginName: '',
-    panelUrl: '',
-    expiresAt: '',
-    remindAt: '',
-    notes: '',
   })
   await loadVault()
 }
 
-async function addDomain() {
+async function addDomain(body: { domain: string, registrar: string, accountName: string, expiresAt: string, autoRenew: boolean, notes: string }) {
   await $fetch('/api/vault/domains', {
     method: 'POST',
     body: {
-      ...domainForm,
-      expiresAt: toTimestamp(domainForm.expiresAt),
+      ...body,
+      expiresAt: toTimestamp(body.expiresAt),
     },
-  })
-  Object.assign(domainForm, {
-    domain: '',
-    registrar: '',
-    accountName: '',
-    expiresAt: '',
-    autoRenew: false,
-    notes: '',
   })
   await loadVault()
 }
 
-async function updateDomain(id: number) {
+async function updateDomain(id: number, body: { domain: string, registrar: string, accountName: string, expiresAt: string, autoRenew: boolean, notes: string }) {
   await $fetch(`/api/vault/domains/${id}`, {
     method: 'PUT',
     body: {
-      ...domainForm,
-      expiresAt: toTimestamp(domainForm.expiresAt),
+      ...body,
+      expiresAt: toTimestamp(body.expiresAt),
     },
-  })
-  Object.assign(domainForm, {
-    domain: '',
-    registrar: '',
-    accountName: '',
-    expiresAt: '',
-    autoRenew: false,
-    notes: '',
   })
   await loadVault()
 }
 
-async function addWebsite() {
+async function addWebsite(body: { name: string, url: string, notes: string }) {
   await $fetch('/api/vault/websites', {
     method: 'POST',
     body: {
-      ...websiteForm,
-      url: normalizeWebsiteUrl(websiteForm.url),
+      ...body,
+      url: normalizeWebsiteUrl(body.url),
     },
   })
-  Object.assign(websiteForm, { name: '', url: '', notes: '' })
   await loadVault()
 }
 
-async function updateWebsite(id: number) {
+async function updateWebsite(id: number, body: { name: string, url: string, notes: string }) {
   await $fetch(`/api/vault/websites/${id}`, {
     method: 'PUT',
     body: {
-      ...websiteForm,
-      url: normalizeWebsiteUrl(websiteForm.url),
+      ...body,
+      url: normalizeWebsiteUrl(body.url),
     },
   })
-  Object.assign(websiteForm, { name: '', url: '', notes: '' })
   await loadVault()
 }
 
-async function addWebsiteAccount() {
-  await $fetch('/api/vault/website-accounts', { method: 'POST', body: websiteAccountForm })
-  Object.assign(websiteAccountForm, {
-    websiteId: websiteAccountForm.websiteId,
-    accountName: '',
-    loginIdentifier: '',
-    notes: '',
-  })
+async function addWebsiteAccount(body: { websiteId: number, accountName: string, loginIdentifier: string, notes: string }) {
+  await $fetch('/api/vault/website-accounts', { method: 'POST', body })
   await loadVault()
 }
 
-async function updateWebsiteAccount(id: number) {
-  await $fetch(`/api/vault/website-accounts/${id}`, { method: 'PUT', body: websiteAccountForm })
-  Object.assign(websiteAccountForm, {
-    websiteId: websiteAccountForm.websiteId,
-    accountName: '',
-    loginIdentifier: '',
-    notes: '',
-  })
+async function updateWebsiteAccount(id: number, body: { websiteId: number, accountName: string, loginIdentifier: string, notes: string }) {
+  await $fetch(`/api/vault/website-accounts/${id}`, { method: 'PUT', body })
   await loadVault()
 }
 
@@ -395,12 +297,6 @@ await loadMe()
   <VaultDashboard
     v-else
     v-model:active-tab="activeTab"
-    v-model:authenticator-form="authenticatorForm"
-    v-model:backup-code-form="backupCodeForm"
-    v-model:server-form="serverForm"
-    v-model:domain-form="domainForm"
-    v-model:website-form="websiteForm"
-    v-model:website-account-form="websiteAccountForm"
     :user="user"
     :authenticators="authenticators"
     :backup-codes="backupCodes"

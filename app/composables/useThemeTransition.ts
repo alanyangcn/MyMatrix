@@ -1,4 +1,4 @@
-let themeTransitionTimer: ReturnType<typeof window.setTimeout> | null = null
+let themeTransitionTimer: ReturnType<typeof setTimeout> | number | null = null
 
 export function useThemeTransition() {
   function startThemeTransition() {
