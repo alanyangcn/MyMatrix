@@ -116,21 +116,233 @@ function setThemeMode(mode: 'light' | 'dark') {
           </label>
         </div>
 
-        <div class="intro-copy">
-          <AppLogo class="intro-logo" />
-          <p class="eyebrow">
-            {{ t('app.eyebrow') }}
-          </p>
-          <h1>MyMatrix</h1>
-          <p>{{ t('app.tagline') }}</p>
-        </div>
+        <div class="intro-showcase">
+          <div class="intro-copy">
+            <AppLogo class="intro-logo" />
+            <p class="eyebrow">
+              {{ t('app.eyebrow') }}
+            </p>
+            <h1>MyMatrix</h1>
+            <p>{{ t('app.tagline') }}</p>
+          </div>
 
-        <div class="feature-grid">
-          <span>{{ t('summary.websites') }}</span>
-          <span>{{ t('summary.domains') }}</span>
-          <span>{{ t('summary.servers') }}</span>
-          <span>{{ t('summary.authenticators') }}</span>
-          <span>{{ t('summary.backupCodes') }}</span>
+          <div
+            class="vault-illustration"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 520 360"
+              role="img"
+            >
+              <defs>
+                <linearGradient
+                  id="vaultPanel"
+                  x1="108"
+                  x2="424"
+                  y1="66"
+                  y2="296"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#FFFFFF" />
+                  <stop
+                    offset="1"
+                    stop-color="#E8EEF9"
+                  />
+                </linearGradient>
+                <linearGradient
+                  id="vaultAccent"
+                  x1="134"
+                  x2="392"
+                  y1="114"
+                  y2="258"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#4F46E5" />
+                  <stop
+                    offset="1"
+                    stop-color="#14B8A6"
+                  />
+                </linearGradient>
+                <filter
+                  id="softShadow"
+                  x="28"
+                  y="34"
+                  width="464"
+                  height="294"
+                  color-interpolation-filters="sRGB"
+                  filterUnits="userSpaceOnUse"
+                >
+                  <feDropShadow
+                    dx="0"
+                    dy="20"
+                    flood-color="#1E293B"
+                    flood-opacity=".14"
+                    stdDeviation="18"
+                  />
+                </filter>
+              </defs>
+
+              <path
+                class="illustration-orbit orbit-one"
+                d="M94 198c42-80 118-124 210-116 78 7 128 48 150 98"
+              />
+              <path
+                class="illustration-orbit orbit-two"
+                d="M78 238c74 46 174 60 260 18 54-26 84-66 98-110"
+              />
+
+              <g filter="url(#softShadow)">
+                <rect
+                  x="112"
+                  y="76"
+                  width="296"
+                  height="212"
+                  rx="18"
+                  fill="url(#vaultPanel)"
+                />
+                <rect
+                  x="132"
+                  y="100"
+                  width="256"
+                  height="164"
+                  rx="14"
+                  fill="#F8FAFC"
+                  stroke="#D9E2EF"
+                />
+                <rect
+                  x="154"
+                  y="122"
+                  width="92"
+                  height="12"
+                  rx="6"
+                  fill="#CBD5E1"
+                />
+                <rect
+                  x="154"
+                  y="148"
+                  width="72"
+                  height="8"
+                  rx="4"
+                  fill="#E2E8F0"
+                />
+                <rect
+                  x="154"
+                  y="166"
+                  width="108"
+                  height="8"
+                  rx="4"
+                  fill="#E2E8F0"
+                />
+                <rect
+                  x="154"
+                  y="184"
+                  width="86"
+                  height="8"
+                  rx="4"
+                  fill="#E2E8F0"
+                />
+
+                <circle
+                  cx="318"
+                  cy="180"
+                  r="52"
+                  fill="url(#vaultAccent)"
+                  opacity=".12"
+                />
+                <circle
+                  cx="318"
+                  cy="180"
+                  r="38"
+                  fill="none"
+                  stroke="url(#vaultAccent)"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                  stroke-dasharray="154 90"
+                />
+                <path
+                  d="M302 180l12 12 24-28"
+                  fill="none"
+                  stroke="#0F766E"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="8"
+                />
+              </g>
+
+              <g class="floating-card floating-card-left">
+                <rect
+                  x="62"
+                  y="198"
+                  width="132"
+                  height="82"
+                  rx="14"
+                  fill="#FFFFFF"
+                  stroke="#D8E1ED"
+                />
+                <circle
+                  cx="88"
+                  cy="226"
+                  r="12"
+                  fill="#EEF2FF"
+                />
+                <path
+                  d="M84 226h8M88 222v8"
+                  stroke="#4F46E5"
+                  stroke-linecap="round"
+                  stroke-width="2.6"
+                />
+                <rect
+                  x="112"
+                  y="218"
+                  width="54"
+                  height="8"
+                  rx="4"
+                  fill="#CBD5E1"
+                />
+                <rect
+                  x="88"
+                  y="248"
+                  width="78"
+                  height="7"
+                  rx="3.5"
+                  fill="#E2E8F0"
+                />
+              </g>
+
+              <g class="floating-card floating-card-right">
+                <rect
+                  x="336"
+                  y="48"
+                  width="118"
+                  height="78"
+                  rx="14"
+                  fill="#FFFFFF"
+                  stroke="#D8E1ED"
+                />
+                <path
+                  d="M372 92V78a23 23 0 0 1 46 0v14"
+                  fill="none"
+                  stroke="#14B8A6"
+                  stroke-linecap="round"
+                  stroke-width="7"
+                />
+                <rect
+                  x="360"
+                  y="86"
+                  width="70"
+                  height="28"
+                  rx="9"
+                  fill="#CCFBF1"
+                />
+                <circle
+                  cx="395"
+                  cy="100"
+                  r="4"
+                  fill="#0F766E"
+                />
+              </g>
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -230,8 +442,10 @@ function setThemeMode(mode: 'light' | 'dark') {
 
 <style scoped>
 .auth-page {
-  min-height: 100vh;
+  box-sizing: border-box;
+  height: 100dvh;
   padding: 24px;
+  overflow: hidden;
   color: #172033;
   background:
     radial-gradient(circle at 18% 12%, rgb(92 124 250 / 16%), transparent 28%),
@@ -239,10 +453,17 @@ function setThemeMode(mode: 'light' | 'dark') {
     #f5f7fb;
 }
 
+.auth-page *,
+.auth-page *::before,
+.auth-page *::after {
+  box-sizing: border-box;
+}
+
 .auth-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
-  min-height: calc(100vh - 48px);
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid #dce3ee;
   border-radius: 8px;
@@ -261,6 +482,14 @@ function setThemeMode(mode: 'light' | 'dark') {
     linear-gradient(90deg, rgb(99 102 241 / 7%) 1px, transparent 1px),
     linear-gradient(0deg, rgb(99 102 241 / 7%) 1px, transparent 1px);
   background-size: auto, 36px 36px, 36px 36px;
+}
+
+.intro-showcase {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(260px, .78fr);
+  gap: clamp(20px, 4vw, 44px);
+  align-items: center;
+  min-height: 0;
 }
 
 .intro-actions,
@@ -360,21 +589,33 @@ h1 {
   line-height: 1.8;
 }
 
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  max-width: 520px;
+.vault-illustration {
+  width: min(100%, 430px);
+  justify-self: end;
 }
 
-.feature-grid span {
-  border: 1px solid #dce3ee;
-  border-radius: 8px;
-  padding: 12px;
-  color: #334155;
-  font-size: 13px;
-  font-weight: 760;
-  background: rgb(255 255 255 / 78%);
+.vault-illustration svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.illustration-orbit {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.orbit-one {
+  stroke: rgb(79 70 229 / 22%);
+}
+
+.orbit-two {
+  stroke: rgb(20 184 166 / 24%);
+}
+
+.floating-card {
+  filter: drop-shadow(0 18px 24px rgb(30 41 59 / 12%));
 }
 
 .auth-card {
@@ -469,13 +710,62 @@ input:focus {
     padding: 24px;
   }
 
+  .intro-panel {
+    justify-content: flex-start;
+    gap: 18px;
+  }
+
+  .intro-showcase {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .vault-illustration {
+    display: none;
+  }
+
+  .intro-logo {
+    --app-logo-size: 40px;
+    margin-bottom: 12px;
+  }
+
+  .intro-copy p:last-child {
+    margin: 8px 0 0;
+    line-height: 1.55;
+  }
+
   .auth-card {
     border-left: 0;
     border-top: 1px solid #dce3ee;
   }
 
   h1 {
-    font-size: 48px;
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 520px) {
+  .intro-copy p:last-child {
+    display: none;
+  }
+}
+
+@media (max-height: 720px) and (min-width: 901px) {
+  .vault-illustration {
+    width: min(100%, 340px);
+  }
+
+  .intro-logo {
+    --app-logo-size: 46px;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-size: 54px;
+  }
+
+  .intro-copy p:last-child {
+    line-height: 1.62;
   }
 }
 
@@ -505,8 +795,7 @@ input:focus {
 .auth-page.theme-dark .intro-actions,
 .auth-page.theme-dark .language-switch,
 .auth-page.theme-dark .mode-switch,
-.auth-page.theme-dark input,
-.auth-page.theme-dark .feature-grid span {
+.auth-page.theme-dark input {
   border-color: #334155;
   background: rgb(15 23 42 / 88%);
 }
@@ -517,9 +806,36 @@ input:focus {
 
 .auth-page.theme-dark label,
 .auth-page.theme-dark .language-switch,
-.auth-page.theme-dark .intro-copy p:last-child,
-.auth-page.theme-dark .feature-grid span {
+.auth-page.theme-dark .intro-copy p:last-child {
   color: #cbd5e1;
+}
+
+.auth-page.theme-dark .vault-illustration rect[fill="#FFFFFF"],
+.auth-page.theme-dark .vault-illustration rect[fill="#F8FAFC"] {
+  fill: #111827;
+}
+
+.auth-page.theme-dark .vault-illustration rect[stroke="#D8E1ED"],
+.auth-page.theme-dark .vault-illustration rect[stroke="#D9E2EF"] {
+  stroke: #334155;
+}
+
+.auth-page.theme-dark .vault-illustration rect[fill="#CBD5E1"],
+.auth-page.theme-dark .vault-illustration rect[fill="#E2E8F0"] {
+  fill: #475569;
+}
+
+.auth-page.theme-dark .vault-illustration circle[fill="#EEF2FF"] {
+  fill: #1e293b;
+}
+
+.auth-page.theme-dark .vault-illustration circle[fill="#CCFBF1"],
+.auth-page.theme-dark .vault-illustration rect[fill="#CCFBF1"] {
+  fill: #134e4a;
+}
+
+.auth-page.theme-dark .floating-card {
+  filter: drop-shadow(0 18px 24px rgb(0 0 0 / 24%));
 }
 
 .auth-page.theme-dark button,
