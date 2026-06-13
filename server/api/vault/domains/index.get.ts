@@ -1,5 +1,6 @@
 import { and, desc, eq } from 'drizzle-orm'
 import { db, schema } from 'hub:db'
+import { domainToUnicode } from 'node:url'
 
 export default eventHandler(async (event) => {
   const user = await requireUser(event)
@@ -10,10 +11,13 @@ export default eventHandler(async (event) => {
 
   return rows.map(item => ({
     id: item.id,
-    domain: item.domain,
+    domain: domainToUnicode(item.domain),
     registrar: item.registrar,
     accountName: item.accountName,
+    startTime: item.startTime,
     expiresAt: item.expiresAt,
+    price: item.price,
+    currency: item.currency,
     autoRenew: item.autoRenew,
     notes: item.notesEncrypted,
     createdAt: item.createdAt,

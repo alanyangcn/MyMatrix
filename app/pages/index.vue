@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
 
+definePageMeta({
+  layout: false,
+})
+
 type User = {
   id: number
   username: string
@@ -32,8 +36,12 @@ type ServerRecord = {
   ipAddress: string
   loginName: string | null
   panelUrl: string | null
+  startTime: number | null
   expiresAt: number | null
+  price: string | null
+  currency: string | null
   remindAt: number | null
+  autoRenew: boolean
   notes: string | null
 }
 
@@ -42,7 +50,10 @@ type DomainRecord = {
   domain: string
   registrar: string | null
   accountName: string | null
+  startTime: number | null
   expiresAt: number | null
+  price: string | null
+  currency: string | null
   autoRenew: boolean
   notes: string | null
 }
@@ -78,23 +89,98 @@ function getRouteTab(value: typeof route.query.tab) {
   return Array.isArray(value) ? value[0] : value
 }
 
-const authMode = ref<'login' | 'register'>('login')
-const authForm = reactive({
-  username: '',
-  password: '',
-})
-const authError = ref('')
-const user = ref<User | null>(null)
-const loading = ref(false)
-const showPassword = ref(false)
 const initialTab = getRouteTab(route.query.tab)
 const activeTab = ref<VaultTab>(isVaultTab(initialTab) ? initialTab : 'websites')
 
+// 1. Fetch user data with useFetch (SSR-friendly)
+const { data: authData } = await useFetch<{ user: User | null }>('/api/auth/me')
+const user = ref<User | null>(authData.value?.user || null)
+
+if (!user.value) {
+  await navigateTo('/login')
+}
+
+// 2. Define reactive properties for vault data
 const authenticators = ref<Authenticator[]>([])
 const backupCodes = ref<BackupCodeSet[]>([])
 const servers = ref<ServerRecord[]>([])
 const domains = ref<DomainRecord[]>([])
 const websites = ref<WebsiteRecord[]>([])
+
+const toast = useToast()
+const headers = useRequestHeaders(['cookie'])
+
+// 3. Create a custom $fetch instance that intercepts 401 Unauthorized errors to automatically log out the user
+const vaultFetch = $fetch.create({
+  headers,
+  onResponseError({ response }) {
+    if (response.status === 401) {
+      user.value = null
+      if (authData.value) {
+        authData.value.user = null
+      }
+      authenticators.value = []
+      backupCodes.value = []
+      servers.value = []
+      domains.value = []
+      websites.value = []
+
+      if (import.meta.client) {
+        toast.add({
+          title: t('errors.sessionExpiredTitle'),
+          description: t('errors.sessionExpiredDesc'),
+          color: 'error',
+          icon: 'i-lucide-alert-circle',
+        })
+        navigateTo('/login')
+      }
+    }
+  }
+})
+
+// 4. Fetch vault data with useAsyncData (SSR-friendly)
+const { data: vaultData, refresh: refreshVault } = await useAsyncData('vault', async () => {
+  if (!user.value) return null
+  const [nextWebsites, nextAuthenticators, nextBackupCodes, nextServers, nextDomains] = await Promise.all([
+    vaultFetch<WebsiteRecord[]>('/api/vault/websites'),
+    vaultFetch<Authenticator[]>('/api/vault/authenticators'),
+    vaultFetch<BackupCodeSet[]>('/api/vault/backup-codes'),
+    vaultFetch<ServerRecord[]>('/api/vault/servers'),
+    vaultFetch<DomainRecord[]>('/api/vault/domains'),
+  ])
+  return {
+    websites: nextWebsites,
+    authenticators: nextAuthenticators,
+    backupCodes: nextBackupCodes,
+    servers: nextServers,
+    domains: nextDomains,
+  }
+})
+
+// Watch for authData changes to keep state synced
+watch(() => authData.value?.user, (newUser) => {
+  user.value = newUser || null
+  if (newUser) {
+    refreshVault()
+  }
+})
+
+// Watch for vaultData changes to sync panel states
+watch(vaultData, (newData) => {
+  if (newData) {
+    websites.value = newData.websites
+    authenticators.value = newData.authenticators
+    backupCodes.value = newData.backupCodes
+    servers.value = newData.servers
+    domains.value = newData.domains
+  } else {
+    websites.value = []
+    authenticators.value = []
+    backupCodes.value = []
+    servers.value = []
+    domains.value = []
+  }
+}, { immediate: true })
 
 function toTimestamp(value: string) {
   return value ? new Date(`${value}T00:00:00`).getTime() : null
@@ -128,174 +214,142 @@ watch(() => route.query.tab, (tab) => {
   }
 })
 
-async function loadMe() {
-  const data = await $fetch<{ user: User | null }>('/api/auth/me')
-  user.value = data.user
-  if (user.value) await loadVault()
-}
-
 async function loadVault() {
-  const [nextWebsites, nextAuthenticators, nextBackupCodes, nextServers, nextDomains] = await Promise.all([
-    $fetch<WebsiteRecord[]>('/api/vault/websites'),
-    $fetch<Authenticator[]>('/api/vault/authenticators'),
-    $fetch<BackupCodeSet[]>('/api/vault/backup-codes'),
-    $fetch<ServerRecord[]>('/api/vault/servers'),
-    $fetch<DomainRecord[]>('/api/vault/domains'),
-  ])
-
-  websites.value = nextWebsites
-  authenticators.value = nextAuthenticators
-  backupCodes.value = nextBackupCodes
-  servers.value = nextServers
-  domains.value = nextDomains
-}
-
-async function submitAuth() {
-  authError.value = ''
-  loading.value = true
-  try {
-    const endpoint = authMode.value === 'login' ? '/api/auth/login' : '/api/auth/register'
-    const data = await $fetch<{ user: User }>(endpoint, {
-      method: 'POST',
-      body: authForm,
-    })
-    user.value = data.user
-    authForm.password = ''
-    await loadVault()
-  }
-  catch (error: unknown) {
-    const fetchError = error as { data?: { message?: string }, statusMessage?: string }
-    authError.value = fetchError.data?.message || fetchError.statusMessage || t('errors.authenticationFailed')
-  }
-  finally {
-    loading.value = false
-  }
+  await refreshVault()
 }
 
 async function logout() {
   await $fetch('/api/auth/logout', { method: 'POST' })
   user.value = null
+  authData.value = { user: null }
+  vaultData.value = null
+  await navigateTo('/login')
 }
 
 async function addAuthenticator(body: { issuer: string, accountName: string, secret: string, notes: string }) {
-  await $fetch('/api/vault/authenticators', { method: 'POST', body })
+  await vaultFetch('/api/vault/authenticators', { method: 'POST', body })
+  toast.add({ title: t('actions.addSuccess'), color: 'success' })
   await loadVault()
 }
 
 async function updateAuthenticator(id: number, body: { issuer: string, accountName: string, secret: string, notes: string }) {
-  await $fetch(`/api/vault/authenticators/${id}`, { method: 'PUT', body })
+  await vaultFetch(`/api/vault/authenticators/${id}`, { method: 'PUT', body })
+  toast.add({ title: t('actions.updateSuccess'), color: 'success' })
   await loadVault()
 }
 
 async function addBackupCodes(body: { provider: string, accountName: string, codes: string, notes: string }) {
-  await $fetch('/api/vault/backup-codes', { method: 'POST', body })
+  await vaultFetch('/api/vault/backup-codes', { method: 'POST', body })
+  toast.add({ title: t('actions.addSuccess'), color: 'success' })
   await loadVault()
 }
 
 async function updateBackupCodes(id: number, body: { provider: string, accountName: string, codes: string, notes: string }) {
-  await $fetch(`/api/vault/backup-codes/${id}`, { method: 'PUT', body })
+  await vaultFetch(`/api/vault/backup-codes/${id}`, { method: 'PUT', body })
+  toast.add({ title: t('actions.updateSuccess'), color: 'success' })
   await loadVault()
 }
 
-async function addServer(body: { name: string, provider: string, ipAddress: string, loginName: string, panelUrl: string, expiresAt: string, remindAt: string, notes: string }) {
-  await $fetch('/api/vault/servers', {
+async function addServer(body: { name: string, provider: string, ipAddress: string, loginName: string, panelUrl: string, startTime: string, expiresAt: string, price: string, currency: string, autoRenew: boolean, remindAt: string, notes: string }) {
+  await vaultFetch('/api/vault/servers', {
     method: 'POST',
     body: {
       ...body,
+      startTime: toTimestamp(body.startTime),
       expiresAt: toTimestamp(body.expiresAt),
       remindAt: toTimestamp(body.remindAt),
     },
   })
+  toast.add({ title: t('actions.addSuccess'), color: 'success' })
   await loadVault()
 }
 
-async function updateServer(id: number, body: { name: string, provider: string, ipAddress: string, loginName: string, panelUrl: string, expiresAt: string, remindAt: string, notes: string }) {
-  await $fetch(`/api/vault/servers/${id}`, {
+async function updateServer(id: number, body: { name: string, provider: string, ipAddress: string, loginName: string, panelUrl: string, startTime: string, expiresAt: string, price: string, currency: string, autoRenew: boolean, remindAt: string, notes: string }) {
+  await vaultFetch(`/api/vault/servers/${id}`, {
     method: 'PUT',
     body: {
       ...body,
+      startTime: toTimestamp(body.startTime),
       expiresAt: toTimestamp(body.expiresAt),
       remindAt: toTimestamp(body.remindAt),
     },
   })
+  toast.add({ title: t('actions.updateSuccess'), color: 'success' })
   await loadVault()
 }
 
-async function addDomain(body: { domain: string, registrar: string, accountName: string, expiresAt: string, autoRenew: boolean, notes: string }) {
-  await $fetch('/api/vault/domains', {
+async function addDomain(body: { domain: string, registrar: string, accountName: string, startTime: string, expiresAt: string, price: string, currency: string, autoRenew: boolean, notes: string }) {
+  await vaultFetch('/api/vault/domains', {
     method: 'POST',
     body: {
       ...body,
+      startTime: toTimestamp(body.startTime),
       expiresAt: toTimestamp(body.expiresAt),
     },
   })
+  toast.add({ title: t('actions.addSuccess'), color: 'success' })
   await loadVault()
 }
 
-async function updateDomain(id: number, body: { domain: string, registrar: string, accountName: string, expiresAt: string, autoRenew: boolean, notes: string }) {
-  await $fetch(`/api/vault/domains/${id}`, {
+async function updateDomain(id: number, body: { domain: string, registrar: string, accountName: string, startTime: string, expiresAt: string, price: string, currency: string, autoRenew: boolean, notes: string }) {
+  await vaultFetch(`/api/vault/domains/${id}`, {
     method: 'PUT',
     body: {
       ...body,
+      startTime: toTimestamp(body.startTime),
       expiresAt: toTimestamp(body.expiresAt),
     },
   })
+  toast.add({ title: t('actions.updateSuccess'), color: 'success' })
   await loadVault()
 }
 
 async function addWebsite(body: { name: string, url: string, notes: string }) {
-  await $fetch('/api/vault/websites', {
+  await vaultFetch('/api/vault/websites', {
     method: 'POST',
     body: {
       ...body,
       url: normalizeWebsiteUrl(body.url),
     },
   })
+  toast.add({ title: t('actions.addSuccess'), color: 'success' })
   await loadVault()
 }
 
 async function updateWebsite(id: number, body: { name: string, url: string, notes: string }) {
-  await $fetch(`/api/vault/websites/${id}`, {
+  await vaultFetch(`/api/vault/websites/${id}`, {
     method: 'PUT',
     body: {
       ...body,
       url: normalizeWebsiteUrl(body.url),
     },
   })
+  toast.add({ title: t('actions.updateSuccess'), color: 'success' })
   await loadVault()
 }
 
 async function addWebsiteAccount(body: { websiteId: number, accountName: string, loginIdentifier: string, notes: string }) {
-  await $fetch('/api/vault/website-accounts', { method: 'POST', body })
+  await vaultFetch('/api/vault/website-accounts', { method: 'POST', body })
+  toast.add({ title: t('actions.addSuccess'), color: 'success' })
   await loadVault()
 }
 
 async function updateWebsiteAccount(id: number, body: { websiteId: number, accountName: string, loginIdentifier: string, notes: string }) {
-  await $fetch(`/api/vault/website-accounts/${id}`, { method: 'PUT', body })
+  await vaultFetch(`/api/vault/website-accounts/${id}`, { method: 'PUT', body })
+  toast.add({ title: t('actions.updateSuccess'), color: 'success' })
   await loadVault()
 }
 
 async function removeRecord(endpoint: string, id: number) {
-  await $fetch(`${endpoint}/${id}`, { method: 'DELETE' })
+  await vaultFetch(`${endpoint}/${id}`, { method: 'DELETE' })
+  toast.add({ title: t('actions.deleteSuccess'), color: 'success' })
   await loadVault()
 }
-
-await loadMe()
 </script>
 
 <template>
-  <AuthScreen
-    v-if="!user"
-    v-model:auth-mode="authMode"
-    v-model:auth-form="authForm"
-    v-model:show-password="showPassword"
-    :auth-error="authError"
-    :loading="loading"
-    @submit="submitAuth"
-  />
-
   <VaultDashboard
-    v-else
+    v-if="user"
     v-model:active-tab="activeTab"
     :user="user"
     :authenticators="authenticators"

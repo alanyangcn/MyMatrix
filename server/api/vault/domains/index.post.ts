@@ -6,7 +6,10 @@ export default eventHandler(async (event) => {
     domain?: string
     registrar?: string
     accountName?: string
+    startTime?: number | null
     expiresAt?: number | null
+    price?: string
+    currency?: string
     autoRenew?: boolean
     notes?: string
   }>(event)
@@ -32,7 +35,10 @@ export default eventHandler(async (event) => {
     domain,
     registrar: body.registrar?.trim() || null,
     accountName: body.accountName?.trim() || null,
+    startTime: body.startTime || null,
     expiresAt: body.expiresAt || null,
+    price: body.price?.trim() || null,
+    currency: body.currency?.trim() || null,
     remindAt: null,
     autoRenew: Boolean(body.autoRenew),
     notesEncrypted: body.notes?.trim() || null,

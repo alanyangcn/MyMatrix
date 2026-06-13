@@ -1,6 +1,6 @@
 {
   "app": {
-    "eyebrow": "Cloudflare 私有资料库",
+    "eyebrow": "私有资料库",
     "vaultEyebrow": "私有资料库",
     "tagline": "在你自己的 Workers 应用里保存账号、域名续费、身份验证器密钥、备用验证码、服务器记录和提醒日期。"
   },
@@ -13,6 +13,14 @@
     "hidePassword": "隐藏密码",
     "createUser": "创建用户",
     "logout": "退出登录"
+  },
+  "profile": {
+    "accountMenu": "账号菜单",
+    "personalInfo": "个人资料",
+    "username": "用户名",
+    "displayName": "昵称",
+    "role": "角色",
+    "back": "返回首页"
   },
   "summary": {
     "authenticators": "身份验证器",
@@ -31,7 +39,15 @@
   "reminders": {
     "title": "近期提醒",
     "empty": "未来 45 天没有提醒。",
-    "expires": "到期"
+    "expires": "到期",
+    "expiredDomainsTitle": "有 {count} 个域名已到期（未开启自动续费）",
+    "expiredDomainsDesc": "已于 {date} 到期，请及时处理。",
+    "expiringSoonDomainsTitle": "有 {count} 个域名即将到期（未开启自动续费）",
+    "expiringSoonDomainsDesc": "将于 {date} 到期，请及时处理。",
+    "expiredServersTitle": "有 {count} 台服务器已到期（未开启自动续费）",
+    "expiredServersDesc": "已于 {date} 到期，请及时处理。",
+    "expiringSoonServersTitle": "有 {count} 台服务器即将到期（未开启自动续费）",
+    "expiringSoonServersDesc": "将于 {date} 到期，请及时处理。"
   },
   "types": {
     "server": "服务器",
@@ -50,7 +66,15 @@
     "panelUrl": "管理面板 URL",
     "domain": "域名",
     "registrar": "注册商",
+    "startTime": "开始时间",
     "expiresAt": "截止时间",
+    "price": "价格",
+    "currency": "货币单位",
+    "duration": "购买时长",
+    "yearUnit": "年",
+    "monthUnit": "月",
+    "autoCalculate": "自动计算",
+    "calculatedExpires": "自动计算截止时间",
     "remindAt": "提醒时间",
     "autoRenew": "自动续费",
     "websiteName": "网站名称",
@@ -82,7 +106,10 @@
     "confirmDeleteTitle": "确认删除",
     "confirmDeleteMessage": "确定要删除“{name}”吗？此操作不可撤销。",
     "confirmDelete": "确认删除",
-    "delete": "删除"
+    "delete": "删除",
+    "addSuccess": "添加成功",
+    "updateSuccess": "保存成功",
+    "deleteSuccess": "删除成功"
   },
   "status": {
     "autoRenew": "自动续费",
@@ -98,15 +125,37 @@
     "websiteAccountsAll": "还没有账号。"
   },
   "errors": {
-    "authenticationFailed": "认证失败"
+    "authenticationFailed": "认证失败",
+    "sessionExpiredTitle": "登录会话已过期",
+    "sessionExpiredDesc": "您的登录已失效或在其他地方被登出，请重新登录。"
   },
   "language": {
     "label": "语言",
     "zh": "简体中文",
-    "en": "EN"
+    "en": "English"
   },
   "theme": {
     "dark": "切换到暗色模式",
     "light": "切换到浅色模式"
+  },
+  "placeholders": {
+    "username": "用户名",
+    "password": "密码",
+    "providerExample": "例如 Google, GitHub 等",
+    "accountExample": "例如 user{'@'}example.com",
+    "totpSecretExample": "例如 JBSWY3DPEHPK3PXP",
+    "backupCodesPrompt": "在此处输入备用验证码...",
+    "domainExample": "例如 example.com",
+    "registrarExample": "例如 Namecheap, GoDaddy 等",
+    "accountInfoExample": "例如账户信息、注册邮箱",
+    "serverNameExample": "例如 production-server-1",
+    "serverProviderExample": "例如 AWS, DigitalOcean 等",
+    "ipExample": "例如 192.168.1.1",
+    "loginNameExample": "例如 root, ubuntu 等",
+    "panelUrlExample": "例如 https://panel.example.com",
+    "websiteNameExample": "例如 Google, GitHub 等",
+    "accountNameExample": "例如 主账号、工作邮箱",
+    "loginIdentifierExample": "例如用户名或邮箱",
+    "priceExample": "例如 68元/年 或 $12.99/年"
   }
 }

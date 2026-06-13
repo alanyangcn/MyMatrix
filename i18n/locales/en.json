@@ -1,6 +1,6 @@
 {
   "app": {
-    "eyebrow": "Private Cloudflare Vault",
+    "eyebrow": "Private Vault",
     "vaultEyebrow": "Private Vault",
     "tagline": "Store accounts, domain renewals, authenticator secrets, backup codes, server records, and reminder dates in your own Workers-backed app."
   },
@@ -13,6 +13,14 @@
     "hidePassword": "Hide password",
     "createUser": "Create user",
     "logout": "Logout"
+  },
+  "profile": {
+    "accountMenu": "Account menu",
+    "personalInfo": "Profile",
+    "username": "Username",
+    "displayName": "Nickname",
+    "role": "Role",
+    "back": "Back home"
   },
   "summary": {
     "authenticators": "Authenticators",
@@ -31,7 +39,15 @@
   "reminders": {
     "title": "Upcoming",
     "empty": "No reminders in the next 45 days.",
-    "expires": "expires"
+    "expires": "expires",
+    "expiredDomainsTitle": "{count} domain(s) expired (Auto-Renew disabled)",
+    "expiredDomainsDesc": "expired on {date}. Please renew now.",
+    "expiringSoonDomainsTitle": "{count} domain(s) expiring soon (Auto-Renew disabled)",
+    "expiringSoonDomainsDesc": "expires on {date}. Please renew soon.",
+    "expiredServersTitle": "{count} server(s) expired (Auto-Renew disabled)",
+    "expiredServersDesc": "expired on {date}. Please renew now.",
+    "expiringSoonServersTitle": "{count} server(s) expiring soon (Auto-Renew disabled)",
+    "expiringSoonServersDesc": "expires on {date}. Please renew soon."
   },
   "types": {
     "server": "server",
@@ -50,7 +66,15 @@
     "panelUrl": "Panel URL",
     "domain": "Domain",
     "registrar": "Registrar",
-    "expiresAt": "Deadline",
+    "startTime": "Start Time",
+    "expiresAt": "Expiration Date",
+    "price": "Price",
+    "currency": "Currency",
+    "duration": "Duration",
+    "yearUnit": "Yr",
+    "monthUnit": "Mo",
+    "autoCalculate": "Auto-calculate",
+    "calculatedExpires": "Calculated Expiration",
     "remindAt": "Reminder time",
     "autoRenew": "Auto renew",
     "websiteName": "Website name",
@@ -82,7 +106,10 @@
     "confirmDeleteTitle": "Confirm deletion",
     "confirmDeleteMessage": "Delete \"{name}\"? This action cannot be undone.",
     "confirmDelete": "Delete",
-    "delete": "Delete"
+    "delete": "Delete",
+    "addSuccess": "Added successfully",
+    "updateSuccess": "Saved successfully",
+    "deleteSuccess": "Deleted successfully"
   },
   "status": {
     "autoRenew": "auto renew",
@@ -98,7 +125,9 @@
     "websiteAccountsAll": "No accounts yet."
   },
   "errors": {
-    "authenticationFailed": "Authentication failed"
+    "authenticationFailed": "Authentication failed",
+    "sessionExpiredTitle": "Session Expired",
+    "sessionExpiredDesc": "Your session has expired or you have been logged out. Please log in again."
   },
   "language": {
     "label": "Language",
@@ -108,5 +137,25 @@
   "theme": {
     "dark": "Switch to dark mode",
     "light": "Switch to light mode"
+  },
+  "placeholders": {
+    "username": "Username",
+    "password": "Password",
+    "providerExample": "e.g. Google, GitHub, etc.",
+    "accountExample": "e.g. user{'@'}example.com",
+    "totpSecretExample": "e.g. JBSWY3DPEHPK3PXP",
+    "backupCodesPrompt": "Enter backup codes here...",
+    "domainExample": "e.g. example.com",
+    "registrarExample": "e.g. Namecheap, GoDaddy, etc.",
+    "accountInfoExample": "e.g. Account info, registered email",
+    "serverNameExample": "e.g. production-server-1",
+    "serverProviderExample": "e.g. AWS, DigitalOcean, etc.",
+    "ipExample": "e.g. 192.168.1.1",
+    "loginNameExample": "e.g. root, ubuntu, etc.",
+    "panelUrlExample": "e.g. https://panel.example.com",
+    "websiteNameExample": "e.g. Google, GitHub, etc.",
+    "accountNameExample": "e.g. Primary Account, work email",
+    "loginIdentifierExample": "e.g. username or email",
+    "priceExample": "e.g. $12.99/yr or £10/yr"
   }
 }

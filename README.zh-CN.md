@@ -134,14 +134,16 @@ pnpm build
 pnpm deploy-cloudflare
 ```
 
-部署脚本会使用 Cloudflare Nitro preset 构建项目，通过 Wrangler 部署，并远程应用 D1 migrations。
+部署脚本会使用 Cloudflare Nitro preset 构建项目，先远程应用 D1 migrations，再使用 NuxtHub 生成的 Cloudflare 配置通过 Wrangler 部署。
 
-Cloudflare bindings 配置在 `wrangler.jsonc`：
+Cloudflare 资源 bindings 配置在 `nuxt.config.ts`，由 NuxtHub 在构建时生成 `.output/server/wrangler.json`：
 
 - `DB`：D1 SQLite
 - `KV`：重定向数据
 - `CACHE`：缓存响应
 - `BLOB`：R2-backed Blob 存储
+
+`wrangler.jsonc` 只保留 observability 等非 Hub 资源配置。
 
 正式使用前请确认：
 

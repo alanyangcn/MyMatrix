@@ -1,5 +1,6 @@
 import { and, eq, gte, lte } from 'drizzle-orm'
 import { db, schema } from 'hub:db'
+import { domainToUnicode } from 'node:url'
 
 export default eventHandler(async (event) => {
   const user = await requireUser(event)
@@ -35,7 +36,7 @@ export default eventHandler(async (event) => {
     ...domains.map(item => ({
       type: 'domain',
       id: item.id,
-      title: item.domain,
+      title: domainToUnicode(item.domain),
       provider: item.registrar,
       expiresAt: item.expiresAt,
       remindAt: item.expiresAt,

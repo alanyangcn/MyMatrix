@@ -66,293 +66,159 @@ function submitAuthenticatorForm() {
 </script>
 
 <template>
-  <div class="tab-body">
-    <div class="list-toolbar">
-      <h2>{{ t('tabs.authenticators') }}</h2>
-      <div>
-        <button
-          class="primary compact-button"
-          type="button"
-          @click="openAddAuthenticatorForm"
-        >
-          {{ t('actions.addAuthenticator') }}
-        </button>
-      </div>
+  <div class="flex flex-col gap-3 sm:gap-4">
+    <!-- Toolbar -->
+    <div class="flex items-center justify-between gap-4">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+        {{ t('tabs.authenticators') }}
+      </h2>
+      <UButton
+        color="primary"
+        size="md"
+        icon="i-lucide-plus"
+        class="font-semibold"
+        @click="openAddAuthenticatorForm"
+      >
+        {{ t('actions.addAuthenticator') }}
+      </UButton>
     </div>
-    <section class="domain-card-list">
+
+    <!-- Cards List -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
       <p
         v-if="!authenticators.length"
-        class="empty-state"
+        class="col-span-full py-8 text-center text-sm text-slate-500 dark:text-slate-400"
       >
         {{ t('empty.authenticators') }}
       </p>
-      <article
+
+      <div
         v-for="item of authenticators"
         :key="item.id"
-        class="domain-card"
+        class="flex flex-col gap-2.5 sm:gap-3 p-3.5 sm:p-4 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/40 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-xs transition-all duration-150"
       >
-        <div class="domain-card-main">
-          <strong>{{ item.issuer }}</strong>
-          <span>{{ item.accountName }}</span>
+        <div class="flex items-center justify-between gap-3 min-w-0">
+          <strong class="font-bold text-slate-900 dark:text-white truncate text-sm">
+            {{ item.issuer }}
+          </strong>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 truncate max-w-[120px]">
+            {{ item.accountName }}
+          </span>
         </div>
-        <div class="domain-card-meta">
-          <span>{{ t('fields.totpSecret') }}</span>
+
+        <div class="space-y-1">
+          <span class="text-xs text-slate-400 dark:text-slate-500 font-medium">
+            {{ t('fields.totpSecret') }}
+          </span>
+          <code class="block w-full overflow-x-auto p-2 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg text-xs font-mono text-slate-700 dark:text-slate-300 whitespace-nowrap">
+            {{ item.secret }}
+          </code>
         </div>
-        <code>{{ item.secret }}</code>
-        <p v-if="item.notes">
+
+        <p
+          v-if="item.notes"
+          class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2"
+        >
           {{ item.notes }}
         </p>
-        <div class="record-actions">
-          <AppIconButton
-            icon="edit"
-            :label="t('actions.edit')"
+
+        <div class="flex items-center justify-end gap-1 mt-auto pt-2 border-t border-slate-200/60 dark:border-slate-800/80">
+          <UButton
+            color="neutral"
+            variant="ghost"
+            icon="i-lucide-pencil"
+            size="md"
+            square
             @click="openEditAuthenticatorForm(item)"
           />
-          <AppIconButton
-            icon="delete"
-            :label="t('actions.delete')"
-            variant="danger"
+          <UButton
+            color="error"
+            variant="ghost"
+            icon="i-lucide-trash-2"
+            size="md"
+            square
             @click="emit('remove-record', '/api/vault/authenticators', item.id, item.issuer)"
           />
         </div>
-      </article>
-    </section>
+      </div>
+    </div>
 
-    <!-- Modal -->
-    <AppModal
-      :open="showAuthenticatorForm"
+    <!-- Modal Form -->
+    <UModal
+      v-model:open="showAuthenticatorForm"
       :title="editingAuthenticatorId ? t('actions.editAuthenticator') : t('actions.addAuthenticator')"
-      @close="closeAuthenticatorForm"
     >
-      <form
-        class="modal-form"
-        @submit.prevent="submitAuthenticatorForm"
-      >
-        <label class="form-field">
-          <span>{{ t('fields.issuer') }}</span>
-          <input
-            v-model="authenticatorForm.issuer"
-            :placeholder="t('fields.issuer')"
-            required
-          >
-        </label>
-        <label class="form-field">
-          <span>{{ t('fields.account') }}</span>
-          <input
-            v-model="authenticatorForm.accountName"
-            :placeholder="t('fields.account')"
-            required
-          >
-        </label>
-        <label class="form-field">
-          <span>{{ t('fields.totpSecret') }}</span>
-          <input
-            v-model="authenticatorForm.secret"
-            :placeholder="t('fields.totpSecret')"
-            required
-          >
-        </label>
-        <label class="form-field">
-          <span>{{ t('fields.notes') }}</span>
-          <input
-            v-model="authenticatorForm.notes"
-            :placeholder="t('fields.notes')"
-          >
-        </label>
-        <AppButton
-          align="end"
-          size="sm"
-          type="submit"
-          variant="primary"
+      <template #body>
+        <form
+          class="space-y-4"
+          @submit.prevent="submitAuthenticatorForm"
         >
-          {{ editingAuthenticatorId ? t('actions.save') : t('actions.addAuthenticator') }}
-        </AppButton>
-      </form>
-    </AppModal>
+          <UFormField
+            :label="t('fields.issuer')"
+            required
+          >
+            <UInput
+              v-model="authenticatorForm.issuer"
+              :placeholder="t('placeholders.providerExample')"
+              required
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            :label="t('fields.account')"
+            required
+          >
+            <UInput
+              v-model="authenticatorForm.accountName"
+              :placeholder="t('placeholders.accountExample')"
+              required
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            :label="t('fields.totpSecret')"
+            required
+          >
+            <UInput
+              v-model="authenticatorForm.secret"
+              :placeholder="t('placeholders.totpSecretExample')"
+              required
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField :label="t('fields.notes')">
+            <UInput
+              v-model="authenticatorForm.notes"
+              :placeholder="t('fields.notes')"
+              class="w-full"
+            />
+          </UFormField>
+
+          <div class="flex justify-end gap-2.5 pt-2">
+            <UButton
+              type="button"
+              color="neutral"
+              variant="outline"
+              size="md"
+              class="font-semibold"
+              @click="closeAuthenticatorForm"
+            >
+              {{ t('actions.cancel') }}
+            </UButton>
+            <UButton
+              type="submit"
+              color="primary"
+              size="md"
+              class="font-semibold"
+            >
+              {{ editingAuthenticatorId ? t('actions.save') : t('actions.addAuthenticator') }}
+            </UButton>
+          </div>
+        </form>
+      </template>
+    </UModal>
   </div>
 </template>
-
-<style scoped>
-.tab-body {
-  padding: 0;
-}
-
-.list-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.list-toolbar h2 {
-  margin: 0;
-  color: #101828;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.compact-button {
-  min-height: 36px;
-  padding: 8px 14px;
-}
-
-.domain-card-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 10px;
-}
-
-.domain-card {
-  display: grid;
-  gap: 8px;
-  align-content: start;
-  border: 1px solid #e0e6ed;
-  border-radius: 8px;
-  padding: 12px;
-  background: #fff;
-  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
-}
-
-.domain-card:hover {
-  border-color: #c9d3e1;
-  box-shadow: 0 12px 28px rgb(30 41 59 / 8%);
-  transform: translateY(-1px);
-}
-
-.domain-card-main {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.domain-card-main strong {
-  min-width: 0;
-  overflow: hidden;
-  color: #151b23;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.domain-card-main span {
-  flex: 0 0 auto;
-  border-radius: 999px;
-  padding: 3px 8px;
-  color: #4b5563;
-  font-size: 12px;
-  background: #eef2f7;
-}
-
-.domain-card-meta {
-  display: grid;
-  gap: 4px;
-}
-
-.domain-card-meta span,
-.domain-card a,
-.domain-card p {
-  margin: 0;
-  overflow-wrap: anywhere;
-  color: #5f6d7e;
-  font-size: 13px;
-}
-
-code {
-  overflow: auto;
-  max-width: 100%;
-  margin: 0;
-  border: 1px solid #dde4eb;
-  border-radius: 7px;
-  padding: 8px;
-  color: #233142;
-  background: #f3f6f9;
-  font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 12px;
-}
-
-.record-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.empty-state {
-  margin: 0;
-  padding: 18px;
-  color: #697789;
-  text-align: center;
-}
-
-.modal-form {
-  display: grid;
-  gap: 16px;
-}
-
-.form-field {
-  display: grid;
-  gap: 6px;
-}
-
-.form-field span {
-  font-size: 13px;
-  font-weight: 600;
-  color: #354253;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  min-height: 38px;
-  border: 1px solid #d1d9e4;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font: inherit;
-  font-size: 14px;
-  background: #fff;
-  outline: none;
-}
-
-/* Dark mode styling overrides */
-
-:global(.theme-dark) .domain-card,
-:global(.theme-dark) input,
-:global(.theme-dark) select,
-:global(.theme-dark) textarea {
-  border-color: #334155;
-  color: #e5e7eb;
-  background: rgb(30 41 59 / 86%);
-}
-
-:global(.theme-dark) .domain-card:hover {
-  border-color: #475569;
-  background: #1e293b;
-}
-
-:global(.theme-dark) .domain-card-main strong {
-  color: #f8fafc;
-}
-
-:global(.theme-dark) .domain-card-main span {
-  color: #c7d2fe;
-  background: #312e81;
-}
-
-:global(.theme-dark) .domain-card-meta span,
-:global(.theme-dark) .domain-card p,
-:global(.theme-dark) code {
-  border-color: #334155;
-  color: #cbd5e1;
-  background: #111827;
-}
-
-:global(.theme-dark) input:focus,
-:global(.theme-dark) select:focus,
-:global(.theme-dark) textarea:focus {
-  border-color: #818cf8;
-  box-shadow: 0 0 0 4px rgb(129 140 248 / 18%);
-}
-</style>

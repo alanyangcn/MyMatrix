@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --ui-text-inverted: #ffffff !important;
+}

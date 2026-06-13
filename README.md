@@ -128,14 +128,16 @@ Deploy to Cloudflare:
 pnpm deploy-cloudflare
 ```
 
-The deployment script builds with the Cloudflare Nitro preset, deploys with Wrangler, and applies D1 migrations remotely.
+The deployment script builds with the Cloudflare Nitro preset, applies D1 migrations remotely, and then deploys with Wrangler using the NuxtHub-generated Cloudflare config.
 
-Cloudflare bindings are configured in `wrangler.jsonc`:
+Cloudflare resource bindings are configured in `nuxt.config.ts` so NuxtHub can generate `.output/server/wrangler.json` at build time:
 
 - `DB` for D1 SQLite
 - `KV` for redirect data
 - `CACHE` for cached responses
 - `BLOB` for R2-backed Blob storage
+
+`wrangler.jsonc` is reserved for non-Hub Cloudflare options such as observability.
 
 Before using the live app, confirm these are done:
 
