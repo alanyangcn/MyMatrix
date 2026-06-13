@@ -293,6 +293,16 @@ function openEditServerForm(server: ServerRecord) {
   showServerForm.value = true
 }
 
+function onCreateProvider(arg1: any, arg2?: any) {
+  const item = arg2 !== undefined ? arg2 : arg1
+  serverForm.provider = typeof item === 'string' ? item : (item?.value || item?.label || String(item))
+}
+
+function onCreateCurrency(arg1: any, arg2?: any) {
+  const item = arg2 !== undefined ? arg2 : arg1
+  serverForm.currency = typeof item === 'string' ? item : (item?.value || item?.label || String(item))
+}
+
 function formatPriceOnBlur() {
   if (serverForm.price) {
     const parsed = parseFloat(serverForm.price)
@@ -380,10 +390,6 @@ defineExpose({
             {{ item.loginName || '-' }}
           </div>
           <div>
-            <span class="font-medium text-slate-400 dark:text-slate-500">{{ t('fields.startTime') }}:</span>
-            {{ item.startTime ? formatDate(item.startTime) : '-' }}
-          </div>
-          <div>
             <span class="font-medium text-slate-400 dark:text-slate-500">{{ t('fields.expiresAt') }}:</span>
             {{ formatDate(item.expiresAt) }}
           </div>
@@ -468,7 +474,9 @@ defineExpose({
               v-model="serverForm.provider"
               :items="providerOptions"
               :placeholder="t('placeholders.serverProviderExample')"
+              create-item
               class="w-full"
+              @create="onCreateProvider"
             />
           </UFormField>
 
@@ -578,7 +586,9 @@ defineExpose({
               <UInputMenu
                 v-model="serverForm.currency"
                 :items="['CNY', 'USD']"
+                create-item
                 class="w-full"
+                @create="onCreateCurrency"
               />
             </UFormField>
           </div>

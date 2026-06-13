@@ -51,6 +51,7 @@ const registrarOptions = computed(() => {
     'GoDaddy',
     'Namecheap',
     'Porkbun',
+    'Spaceship',
     'NameSilo',
     'Gandi',
     'Squarespace',
@@ -280,6 +281,16 @@ function openEditDomainForm(domain: DomainRecord) {
   showDomainForm.value = true
 }
 
+function onCreateRegistrar(arg1: any, arg2?: any) {
+  const item = arg2 !== undefined ? arg2 : arg1
+  domainForm.registrar = typeof item === 'string' ? item : (item?.value || item?.label || String(item))
+}
+
+function onCreateCurrency(arg1: any, arg2?: any) {
+  const item = arg2 !== undefined ? arg2 : arg1
+  domainForm.currency = typeof item === 'string' ? item : (item?.value || item?.label || String(item))
+}
+
 function formatPriceOnBlur() {
   if (domainForm.price) {
     const parsed = parseFloat(domainForm.price)
@@ -363,10 +374,6 @@ defineExpose({
             {{ item.accountName || '-' }}
           </div>
           <div>
-            <span class="font-medium text-slate-400 dark:text-slate-500">{{ t('fields.startTime') }}:</span>
-            {{ item.startTime ? formatDate(item.startTime) : '-' }}
-          </div>
-          <div>
             <span class="font-medium text-slate-400 dark:text-slate-500">{{ t('fields.expiresAt') }}:</span>
             {{ formatDate(item.expiresAt) }}
           </div>
@@ -437,7 +444,9 @@ defineExpose({
               v-model="domainForm.registrar"
               :items="registrarOptions"
               :placeholder="t('placeholders.registrarExample')"
+              create-item
               class="w-full"
+              @create="onCreateRegistrar"
             />
           </UFormField>
 
@@ -527,7 +536,9 @@ defineExpose({
               <UInputMenu
                 v-model="domainForm.currency"
                 :items="['CNY', 'USD']"
+                create-item
                 class="w-full"
+                @create="onCreateCurrency"
               />
             </UFormField>
           </div>
